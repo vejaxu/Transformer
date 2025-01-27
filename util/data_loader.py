@@ -1,8 +1,3 @@
-"""
-@author : Hyunwoong
-@when : 2019-10-29
-@homepage : https://github.com/gusdnd852
-"""
 from torchtext.legacy.data import Field, BucketIterator
 from torchtext.legacy.datasets.translation import Multi30k
 
