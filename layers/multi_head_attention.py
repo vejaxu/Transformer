@@ -1,11 +1,7 @@
-"""
-@author : Hyunwoong
-@when : 2019-10-25
-@homepage : https://github.com/gusdnd852
-"""
+import torch
 from torch import nn
 
-from layers.scale_dot_product_attention import ScaleDotProductAttention
+from .scale_dot_product_attention import ScaleDotProductAttention
 
 
 class MultiHeadAttention(nn.Module):
@@ -27,7 +23,7 @@ class MultiHeadAttention(nn.Module):
         q, k, v = self.split(q), self.split(k), self.split(v)
 
         # 3. do scale dot product to compute similarity
-        out, attention = self.attention(q, k, v, mask=mask)
+        out, attention_score = self.attention(q, k, v, mask=mask)
 
         # 4. concat and pass to linear layer
         out = self.concat(out)
@@ -36,7 +32,7 @@ class MultiHeadAttention(nn.Module):
         # 5. visualize attention map
         # TODO : we should implement visualization
 
-        return out
+        return out, attention_score
 
     def split(self, tensor):
         """
@@ -45,7 +41,7 @@ class MultiHeadAttention(nn.Module):
         :param tensor: [batch_size, length, d_model]
         :return: [batch_size, head, length, d_tensor]
         """
-        batch_size, length, d_model = tensor.size()
+        batch_size, length, d_model = tensor.shape[0], tensor.shape[1], tensor.shape[2]
 
         d_tensor = d_model // self.n_head
         tensor = tensor.view(batch_size, length, self.n_head, d_tensor).transpose(1, 2)
@@ -65,3 +61,13 @@ class MultiHeadAttention(nn.Module):
 
         tensor = tensor.transpose(1, 2).contiguous().view(batch_size, length, d_model)
         return tensor
+
+
+if __name__ == '__main__':
+    x = torch.randn(2, 4, 6)
+    print(x)
+    atten = MultiHeadAttention(x.shape[-1], 2)
+    out, atten_score = atten(x, x, x)
+    print(out)
+    print(out.shape)
+    print(atten_score.shape)

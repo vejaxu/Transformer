@@ -1,8 +1,4 @@
-"""
-@author : Hyunwoong
-@when : 2019-12-18
-@homepage : https://github.com/gusdnd852
-"""
+import torch
 from torch import nn
 
 
@@ -21,3 +17,11 @@ class PositionwiseFeedForward(nn.Module):
         x = self.dropout(x)
         x = self.linear2(x)
         return x
+
+
+if __name__ == '__main__':
+    x = torch.randn(2, 4, 6)
+    print(x.shape)
+    ffn = PositionwiseFeedForward(x.shape[-1], x.shape[-1] * 2)
+    out = ffn(x)
+    print(out.shape)

@@ -1,11 +1,6 @@
-"""
-@author : Hyunwoong
-@when : 2019-10-22
-@homepage : https://github.com/gusdnd852
-"""
-import math
-
+import torch
 from torch import nn
+import math
 
 
 class ScaleDotProductAttention(nn.Module):
@@ -41,3 +36,12 @@ class ScaleDotProductAttention(nn.Module):
         v = score @ v
 
         return v, score
+
+
+if __name__ == '__main__':
+    x = torch.randn(2, 4, 6, 12)
+    print(x.shape)
+    atten = ScaleDotProductAttention()
+    out, score = atten(x, x, x)
+    print(out.shape)
+    print(score.shape)

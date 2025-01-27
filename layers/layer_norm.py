@@ -22,3 +22,13 @@ class LayerNorm(nn.Module):
         out = (x - mean) / torch.sqrt(var + self.eps)
         out = self.gamma * out + self.beta
         return out
+
+
+if __name__ == '__main__':
+    x = torch.randn(2, 4)
+    layernorm = LayerNorm(x.shape[1])
+    print(x)
+    out = layernorm(x)
+    print(out)
+    print(out.sum(dim=-1, keepdim=True))
+    print(torch.var(out, dim=-1, keepdim=True))
