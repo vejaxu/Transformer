@@ -1,17 +1,8 @@
-"""
-@author : Hyunwoong
-@when : 2019-10-22
-@homepage : https://github.com/gusdnd852
-"""
 import torch
 from torch import nn
 
 
 class PositionalEncoding(nn.Module):
-    """
-    compute sinusoid encoding.
-    """
-
     def __init__(self, d_model, max_len, device):
         """
         constructor of sinusoid encoding class
