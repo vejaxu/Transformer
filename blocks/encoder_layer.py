@@ -1,13 +1,10 @@
-"""
-@author : Hyunwoong
-@when : 2019-10-24
-@homepage : https://github.com/gusdnd852
-"""
+import torch
 from torch import nn
 
-from layers.layer_norm import LayerNorm
-from layers.multi_head_attention import MultiHeadAttention
-from layers.position_wise_feed_forward import PositionwiseFeedForward
+# from layers.layer_norm import LayerNorm
+# from layers.multi_head_attention import MultiHeadAttention
+# from layers.position_wise_feed_forward import PositionwiseFeedForward
+from layers import LayerNorm, MultiHeadAttention, PositionwiseFeedForward
 
 
 class EncoderLayer(nn.Module):
@@ -23,19 +20,23 @@ class EncoderLayer(nn.Module):
         self.dropout2 = nn.Dropout(p=drop_prob)
 
     def forward(self, x, src_mask):
-        # 1. compute self attention
         _x = x
-        x = self.attention(q=x, k=x, v=x, mask=src_mask)
+        x, _ = self.attention(q=x, k=x, v=x, mask=src_mask)
         
-        # 2. add and norm
         x = self.dropout1(x)
         x = self.norm1(x + _x)
         
-        # 3. positionwise feed forward network
         _x = x
         x = self.ffn(x)
-      
-        # 4. add and norm
+
         x = self.dropout2(x)
         x = self.norm2(x + _x)
         return x
+
+
+if __name__ == '__main__':
+    x = torch.randn(size=(2, 4, 6), dtype=torch.float32)
+    print(x.shape)
+    encoder = EncoderLayer(6, 12, 3, 0.1)
+    out = encoder(x, None)
+    print(out.shape)
